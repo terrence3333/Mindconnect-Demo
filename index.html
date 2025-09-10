@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindConnect - Mental Health Support Platform</title>
+    <style>
+        /* CSS Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #7b68ee;
+            --accent-color: #50c878;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --background-light: #f8f9fa;
+            --white: #ffffff;
+            --border-color: #e0e0e0;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--background-light);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            color: var(--accent-color);
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            margin-top: 80px;
+            min-height: calc(100vh - 160px);
+        }
+
+        .page {
+            display: none;
+            padding: 2rem 0;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            background: var(--accent-color);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            background: #45b369;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(80, 200, 120, 0.3);
+        }
+
+        /* Card Styles */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+
+        .card p {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Form Styles */
+        .form-container {
+            background: white;
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 600px;
+            margin: 2rem auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+        }
+
+        /* Button Styles */
+        .btn {
+            background: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background: #3a7bd5;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--text-light);
+        }
+
+        .btn-secondary:hover {
+            background: #555;
+        }
+
+        .btn-success {
+            background: var(--success-color);
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        /* Dashboard Styles */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .dashboard-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .dashboard-card h4 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .dashboard-card .number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Resource List Styles */
+        .resource-list {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin: 2rem 0;
+        }
+
+        .resource-item {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.3s ease;
+        }
+
+        .resource-item:hover {
+            background-color: var(--background-light);
+        }
+
+        .resource-item:last-child {
+            border-bottom: none;
+        }
+
+        .resource-item h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .resource-item p {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .resource-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* Progress Tracking */
+        .progress-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin: 2rem 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close {
+            color: var(--text-light);
+            float: right;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .close:hover {
+            color: var(--text-dark);
+        }
+
+        /* Footer Styles */
+        .footer {
+            background: var(--text-dark);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a:hover {
+            color: var(--accent-color);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--primary-color);
+                flex-direction: column;
+                padding: 1rem 0;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
+
+            .nav-menu.active {
+                display: flex;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .form-container {
+                padding: 2rem;
+                margin: 1rem;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Alert Styles */
+        .alert {
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border-left: 4px solid var(--success-color);
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border-left: 4px solid var(--warning-color);
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid var(--danger-color);
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">MindConnect 🧠💚</div>
+                <nav>
+                    <ul class="nav-menu" id="navMenu">
+                        <li><a href="#" onclick="showPage('home')" class="nav-link active">Home</a></li>
+                        <li><a href="#" onclick="showPage('register')" class="nav-link">Register</a></li>
+                        <li><a href="#" onclick="showPage('resources')" class="nav-link">Resources</a></li>
+                        <li><a href="#" onclick="showPage('dashboard')" class="nav-link">Dashboard</a></li>
+                        <li><a href="#" onclick="showPage('support')" class="nav-link">Support</a></li>
+                        <li><a href="#" onclick="showPage('about')" class="nav-link">About</a></li>
+                    </ul>
+                    <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Home Page -->
+        <div id="home" class="page active">
+            <section class="hero">
+                <div class="container">
+                    <h1>You Are Not Alone</h1>
+                    <p>Connect with peer support groups, professional counselors, healthcare providers, and community organizations dedicated to mental health and wellbeing.</p>
+                    <a href="#" onclick="showPage('register')" class="cta-button">Get Started Today</a>
+                </div>
+            </section>
+
+            <section class="container">
+                <h2 style="text-align: center; margin: 3rem 0 2rem 0; color: var(--primary-color);">How We Support You</h2>
+                <div class="cards-grid">
+                    <div class="card">
+                        <h3>🤝 Peer Support Groups</h3>
+                        <p>Connect with others who understand your journey. Join support groups led by peers who have walked similar paths.</p>
+                        <a href="#" onclick="showPage('support')" class="btn">Find Groups</a>
+                    </div>
+                    <div class="card">
+                        <h3>🏥 Healthcare Providers</h3>
+                        <p>Access a network of mental health professionals, hospitals, and clinics in your area.</p>
+                        <a href="#" onclick="showPage('resources')" class="btn">Find Providers</a>
+                    </div>
+                    <div class="card">
+                        <h3>💬 Professional Counselors</h3>
+                        <p>Connect with licensed therapists and counselors who specialize in depression and mental health.</p>
+                        <a href="#" onclick="showPage('resources')" class="btn">Find Counselors</a>
+                    </div>
+                    <div class="card">
+                        <h3>⛪ Community Support</h3>
+                        <p>Find faith-based support through local churches and community organizations.</p>
+                        <a href="#" onclick="showPage('resources')" class="btn">Find Communities</a>
+                    </div>
+                    <div class="card">
+                        <h3>🌟 NGO Networks</h3>
+                        <p>Access resources from non-profit organizations dedicated to mental health advocacy and support.</p>
+                        <a href="#" onclick="showPage('resources')" class="btn">Explore NGOs</a>
+                    </div>
+                    <div class="card">
+                        <h3>📊 Progress Tracking</h3>
+                        <p>Monitor your mental health journey with tools to track mood, activities, and progress over time.</p>
+                        <a href="#" onclick="showPage('dashboard')" class="btn">Track Progress</a>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Register Page -->
+        <div id="register" class="page">
+            <div class="container">
+                <div class="form-container">
+                    <h2 style="text-align: center; color: var(--primary-color); margin-bottom: 2rem;">Join MindConnect</h2>
+                    <form id="registrationForm">
+                        <div class="form-group">
+                            <label for="fullName">Full Name *</label>
+                            <input type="text" id="fullName" name="fullName" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="age">Age *</label>
+                            <select id="age" name="age" required>
+                                <option value="">Select Age Range</option>
+                                <option value="18-25">18-25</option>
+                                <option value="26-35">26-35</option>
+                                <option value="36-45">36-45</option>
+                                <option value="46-55">46-55</option>
+                                <option value="56-65">56-65</option>
+                                <option value="65+">65+</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="location">Location (City, Country) *</label>
+                            <input type="text" id="location" name="location" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="supportTypes">What type of support are you looking for? (Check all that apply)</label>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="peerSupport" name="supportTypes" value="peer">
+                                <label for="peerSupport">Peer Support Groups</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="professionalCounseling" name="supportTypes" value="counseling">
+                                <label for="professionalCounseling">Professional Counseling</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="healthcare" name="supportTypes" value="healthcare">
+                                <label for="healthcare">Healthcare Providers</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="community" name="supportTypes" value="community">
+                                <label for="community">Community/Faith-based Support</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="ngoSupport" name="supportTypes" value="ngo">
+                                <label for="ngoSupport">NGO Resources</label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="urgencyLevel">How would you describe your current need for support?</label>
+                            <select id="urgencyLevel" name="urgencyLevel">
+                                <option value="">Select urgency level</option>
+                                <option value="low">Looking for preventive support</option>
+                                <option value="moderate">Experiencing some challenges</option>
+                                <option value="high">Need support soon</option>
+                                <option value="urgent">Need immediate help</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="additionalInfo">Additional Information (Optional)</label>
+                            <textarea id="additionalInfo" name="additionalInfo" placeholder="Share anything else that might help us connect you with the right resources..."></textarea>
+                        </div>
+                        
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="privacy" name="privacy" required>
+                            <label for="privacy">I agree to the privacy policy and terms of service *</label>
+                        </div>
+                        
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="newsletter" name="newsletter">
+                            <label for="newsletter">I would like to receive mental health resources and updates via email</label>
+                        </div>
+                        
+                        <button type="submit" class="btn" style="width: 100%;">
+                            <span id="registerButtonText">Create Account</span>
+                            <span id="registerButtonLoader" class="loading" style="display: none;"></span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resources Page -->
+        <div id="resources" class="page">
+            <div class="container">
+                <h2 style="text-align: center; color: var(--primary-color); margin-bottom: 2rem;">Mental Health Resources</h2>
+                
+                <div class="cards-grid">
+                    <div class="card">
+                        <h3>🆘 Crisis Support</h3>
+                        <p><strong>Emergency:</strong> 911 or your local emergency number</p>
+                        <p><strong>Crisis Helpline:</strong> 988 (Suicide & Crisis Lifeline)</p>
+                        <p><strong>Crisis Text Line:</strong> Text HOME to 741741</p>
+                    </div>
+                    <div class="card">
+                        <h3>📞 Immediate Help</h3>
+                        <p>If you're in immediate danger or having thoughts of self-harm, please reach out for help immediately.</p>
+                        <button class="btn btn-success" onclick="showCrisisModal()">Get Immediate Help</button>
+                    </div>
+                </div>
+
+                <div class="resource-list">
+                    <div class="resource-item">
+                        <h4>🤝 Peer Support Groups</h4>
+                        <p>Connect with others who understand your journey through facilitated peer support groups.</p>
+                        <div class="resource-meta">
+                            <span>📍 Available nationwide</span>
+                            <span>⏰ Various times available</span>
+                            <span>💰 Free</span>
+                        </div>
+                        <button class="btn" onclick="joinPeerGroup()">Join a Group</button>
+                    </div>
+                    
+                    <div class="resource-item">
+                        <h4>🏥 Healthcare Providers</h4>
+                        <p>Find mental health professionals, psychiatrists, and specialized healthcare facilities in your area.</p>
+                        <div class="resource-meta">
+                            <span>📍 Location-based search</span>
+                            <span>⏰ Various availability</span>
+                            <span>💰 Insurance accepted</span>
+                        </div>
+                        <button class="btn" onclick="findHealthcare()">Find Providers</button>
+                    </div>
+                    
+                    <div class="resource-item">
+                        <h4>💬 Professional Counselors</h4>
+                        <p>Licensed therapists specializing in depression, anxiety, and other mental health conditions.</p>
+                        <div class="resource-meta">
+                            <span>📍 In-person & online</span>
+                            <span>⏰ Flexible scheduling</span>
+                            <span>💰 Various pricing options</span>
+                        </div>
+                        <button class="btn" onclick="findCounselors()">Find Counselors</button>
+                    </div>
+                    
+                    <div class="resource-item">
+                        <h4>⛪ Faith-Based Support</h4>
+                        <p>Churches and religious organizations offering spiritual support and community connection.</p>
+                        <div class="resource-meta">
+                            <span>📍 Community-based</span>
+                            <span>⏰ Regular meetings</span>
+                            <span>💰 Free</span>
+                        </div>
+                        <button class="btn" onclick="findFaithSupport()">Find Communities</button>
+                    </div>
+                    
+                    <div class="resource-item">
+                        <h4>🌟 NGO Resources</h4>
+                        <p>Non-profit organizations dedicated to mental health advocacy, education, and support services.</p>
+                        <div class="resource-meta">
+                            <span>📍 Various locations</span>
+                            <span>⏰ Multiple programs</span>
+                            <span>💰 Free or low-cost</span>
+                        </div>
+                        <button class="btn" onclick="exploreNGOs()">Explore NGOs</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Page -->
+        <div id="dashboard" class="page">
+            <div class="container">
+                <h2 style="text-align: center; color: var(--primary-color); margin-bottom: 2rem;">Your Mental Health Dashboard</h2>
+                
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <h4>Days Since Joining</h4>
+                        <div class="number" id="daysJoined">15</div>
+                        <p>Keep going strong! 💪</p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h4>Support Connections</h4>
+                        <div class="number" id="connections">3</div>
+                        <p>Groups, counselors, resources</p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h4>Check-ins This Month</h4>
+                        <div class="number" id="checkins">12</div>
+                        <p>Great consistency! ⭐</p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h4>Resources Accessed</h4>
+                        <div class="number" id="resourcesUsed">8</div>
+                        <p>Exploring available help</p>
+                    </div>
+                </div>
+
+                <div class="progress-container">
+                    <h3>Monthly Wellness Goals</h3>
+                    <div style="margin: 1.5rem 0;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span>Daily Check-ins</span>
+                            <span>12/30 days</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 40%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin: 1.5rem 0;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span>Support Group Participation</span>
+                            <span>6/8 sessions</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 75%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin: 1.5rem 0;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span>Self-Care Activities</span>
+                            <span>18/20 planned</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 90%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cards-grid">
+                    <div class="card">
+                        <h3>📝 Daily Check-in</h3>
+                        <p>How are you feeling today? Track your mood and activities.</p>
+                        <button class="btn" onclick="showCheckInModal()">Check In Today</button>
+                    </div>
+                    <div class="card">
+                        <h3>📅 Upcoming Sessions</h3>
+                        <p>Your next support group meeting is tomorrow at 7:00 PM</p>
+                        <button class="btn" onclick="viewSchedule()">View Schedule</button>
+                    </div>
+                    <div class="card">
+                        <h3>📊 Mood Trends</h3>
+                        <p>View your mood patterns and progress over time.</p>
+                        <button class="btn" onclick="viewMoodTrends()">View Trends</button>
+                    </div>
+                    <div class="card">
+                        <h3>🎯 Goals & Achievements</h3>
+                        <p>Track your mental health goals and celebrate wins.</p>
+                        <button class="btn" onclick="manageGoals()">Manage Goals</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Support Page -->
+        <div id="support" class="page">
+            <div class="container">
+                <h2 style="text-align: center; color: var(--primary-color); margin-bottom: 2rem;">Find Support</h2>
+                
+                <div class="form-container" style="max-width: 800px;">
+                    <h3>Find Support Groups Near You</h3>
+                    <form id="supportSearchForm">
+                        <div class="form-group">
+                            <label for="searchLocation">Your Location</label>
+                            <input type="text" id="searchLocation" name="searchLocation" placeholder="City, State or ZIP code">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="supportType">Type of Support</label>
+                            <select id="supportType" name="supportType">
+                                <option value="">All types</option>
+                                <option value="peer">Peer Support Groups</option>
+                                <option value="counseling">Professional Counseling</option>
+                                <option value="healthcare">Healthcare Providers</option>
+                                <option value="faith">Faith-based Support</option>
+                                <option value="ngo">NGO Programs</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="meetingFormat">Meeting Format</label>
+                            <select id="meetingFormat" name="meetingFormat">
+                                <option value="">Any format</option>
+                                <option value="in-person">In-Person</option>
+                                <option value="online">Online</option>
+                                <option value="hybrid">Hybrid</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="btn" style="width: 100%;">Search Support Options</button>
+                    </form>
+                </div>
+
+                <div id="supportResults" class="resource-list">
+                    <div class="resource-item">
+                        <h4>🤝 Zambia Mental Health Support Group</h4>
+                        <p>A peer support group for individuals experiencing depression and anxiety. Led by trained facilitators with lived experience.</p>
+                        <div class="resource-meta">
+                            <span>📍 Lusaka Community Center</span>
+                            <span>⏰ Tuesdays, 6:00 PM</span>
+                            <span>👥 8-12 members</span>
+                            <span>💰 Free</span>
+                        </div>
+                        <button class="btn" onclick="joinGroup('zambia-mental-health')">Join Group</button>
+                        <button class="btn btn-secondary" onclick="contactGroup('zambia-mental-health')">Get Info</button>
+                    </div>
+                    
+                    <div class="resource-item">
+                        <h4>💬 Mindful Hearts Counseling Center</h4>
+                        <p>Professional counseling services with therapists specializing in depression, trauma, and anxiety disorders.</p>
+                        <div class="resource-meta">
+                            <span>📍 Downtown Lusaka</span>
+                            <span>⏰ Mon-Fri, 9 AM - 6 PM</span>
+                            <span>👨‍⚕️ Licensed therapists</span>
+                            <span>💰 Sliding scale fees</span>
+                        </div>
+                        <button class="btn" onclick="bookAppointment('mindful-hearts')">Book Appointment</button>
+                        <button class="btn btn-secondary" onclick="learnMore('mindful-hearts')">Learn More</button>
+                    </div>
+                    
+                    <div class="resource-item">
+                        <h4>🏥 University Teaching Hospital - Mental Health Unit</h4>
+                        <p>Comprehensive mental health services including psychiatric care, counseling, and crisis intervention.</p>
+                        <div class="resource-meta">
+                            <span>📍 University Teaching Hospital</span>
+                            <span>⏰ 24/7 Emergency, Regular hours for appointments</span>
+                            <span>👨‍⚕️ Psychiatrists & social workers</span>
+                            <span>💰 Insurance accepted</span>
+                        </div>
+                        <button class="btn" onclick="contactHospital('uth-mental-health')">Contact Unit</button>
+                        <button class="btn btn-secondary" onclick="getDirections('uth-mental-health')">Get Directions</button>
+                    </div>
+                    
+                    <div class="resource-item">
+                        <h4>⛪ Grace Fellowship Mental Health Ministry</h4>
+                        <p>Faith-based support combining spiritual care with mental health resources and community support.</p>
+                        <div class="resource-meta">
+                            <span>📍 Grace Fellowship Church</span>
+                            <span>⏰ Sundays after service, Thursdays 7 PM</span>
+                            <span>🙏 Faith-based approach</span>
+                            <span>💰 Free</span>
+                        </div>
+                        <button class="btn" onclick="joinMinistry('grace-fellowship')">Join Ministry</button>
+                        <button class="btn btn-secondary" onclick="contactMinistry('grace-fellowship')">Contact</button>
+                    </div>
+                    
+                    <div class="resource-item">
+                        <h4>🌟 Mental Health Zambia (NGO)</h4>
+                        <p>National NGO providing advocacy, education, and support services for mental health awareness and care.</p>
+                        <div class="resource-meta">
+                            <span>📍 Multiple locations</span>
+                            <span>⏰ Various programs</span>
+                            <span>🎯 Advocacy & support</span>
+                            <span>💰 Free resources</span>
+                        </div>
+                        <button class="btn" onclick="explorePrograms('mental-health-zambia')">Explore Programs</button>
+                        <button class="btn btn-secondary" onclick="volunteer('mental-health-zambia')">Volunteer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- About Page -->
+        <div id="about" class="page">
+            <div class="container">
+                <div style="max-width: 800px; margin: 0 auto;">
+                    <h2 style="text-align: center; color: var(--primary-color); margin-bottom: 2rem;">About MindConnect</h2>
+                    
+                    <div class="card" style="margin-bottom: 2rem;">
+                        <h3>Our Mission</h3>
+                        <p>MindConnect is dedicated to supporting individuals experiencing depression by connecting them with comprehensive mental health resources, peer support, and professional care. We believe that no one should face mental health challenges alone.</p>
+                    </div>
+                    
+                    <div class="card" style="margin-bottom: 2rem;">
+                        <h3>Supporting SDG 3: Good Health and Well-being</h3>
+                        <p>Our platform directly contributes to the United Nations Sustainable Development Goal 3 by:</p>
+                        <ul style="margin-left: 2rem; color: var(--text-light);">
+                            <li>Ensuring access to mental health services for all</li>
+                            <li>Reducing stigma around mental health</li>
+                            <li>Promoting mental health awareness and education</li>
+                            <li>Connecting individuals with appropriate care and support</li>
+                            <li>Building resilient communities that support mental wellness</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="cards-grid">
+                        <div class="card">
+                            <h3>🤝 Community-Centered</h3>
+                            <p>We connect people with local support systems including peers, healthcare providers, and community organizations.</p>
+                        </div>
+                        <div class="card">
+                            <h3>🔒 Privacy First</h3>
+                            <p>Your mental health information is protected with the highest standards of privacy and security.</p>
+                        </div>
+                        <div class="card">
+                            <h3>🌍 Accessible</h3>
+                            <p>Free to use and designed to be accessible to all, regardless of economic status or location.</p>
+                        </div>
+                        <div class="card">
+                            <h3>📱 User-Friendly</h3>
+                            <p>Simple, intuitive design that makes finding help and tracking progress easy and stress-free.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card" style="margin-top: 2rem;">
+                        <h3>How It Works</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+                            <div style="text-align: center;">
+                                <div style="background: var(--primary-color); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto; font-weight: bold;">1</div>
+                                <h4>Register</h4>
+                                <p style="font-size: 0.9rem;">Create your account and tell us about your support needs</p>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="background: var(--primary-color); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto; font-weight: bold;">2</div>
+                                <h4>Connect</h4>
+                                <p style="font-size: 0.9rem;">Find support groups, counselors, and resources in your area</p>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="background: var(--primary-color); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto; font-weight: bold;">3</div>
+                                <h4>Track</h4>
+                                <p style="font-size: 0.9rem;">Monitor your progress and celebrate your mental health journey</p>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="background: var(--primary-color); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto; font-weight: bold;">4</div>
+                                <h4>Thrive</h4>
+                                <p style="font-size: 0.9rem;">Build resilience and maintain your mental wellness with ongoing support</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card" style="margin-top: 2rem;">
+                        <h3>Contact Us</h3>
+                        <p>If you need immediate help or have questions about our platform:</p>
+                        <div style="margin-top: 1rem;">
+                            <p><strong>Crisis Support:</strong> 988 or your local emergency number</p>
+                            <p><strong>General Inquiries:</strong> info@mindconnect.org</p>
+                            <p><strong>Technical Support:</strong> support@mindconnect.org</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modals -->
+    <!-- Crisis Support Modal -->
+    <div id="crisisModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeCrisisModal()">&times;</span>
+            <h3 style="color: var(--danger-color); margin-bottom: 1rem;">🆘 Immediate Crisis Support</h3>
+            <div class="alert alert-danger">
+                <strong>If you are in immediate danger, please call emergency services (911) or go to your nearest emergency room.</strong>
+            </div>
+            <div style="margin: 1.5rem 0;">
+                <h4>24/7 Crisis Helplines:</h4>
+                <p><strong>Suicide & Crisis Lifeline:</strong> 988</p>
+                <p><strong>Crisis Text Line:</strong> Text HOME to 741741</p>
+                <p><strong>International Association for Suicide Prevention:</strong> <a href="https://www.iasp.info/resources/Crisis_Centres/" target="_blank">Find local crisis centers</a></p>
+            </div>
+            <div style="margin: 1.5rem 0;">
+                <h4>Remember:</h4>
+                <ul>
+                    <li>You are not alone</li>
+                    <li>This feeling is temporary</li>
+                    <li>Help is available</li>
+                    <li>Your life has value</li>
+                </ul>
+            </div>
+            <button class="btn btn-success" onclick="callCrisisLine()">Call Crisis Line Now</button>
+        </div>
+    </div>
+
+    <!-- Check-in Modal -->
+    <div id="checkinModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeCheckinModal()">&times;</span>
+            <h3 style="color: var(--primary-color); margin-bottom: 1rem;">📝 Daily Check-in</h3>
+            <form id="checkinForm">
+                <div class="form-group">
+                    <label for="moodRating">How are you feeling today? (1-10)</label>
+                    <input type="range" id="moodRating" name="moodRating" min="1" max="10" value="5">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--text-light);">
+                        <span>😢 Very Low</span>
+                        <span>😊 Great</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="activities">What activities did you do today?</label>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="exercise" name="activities" value="exercise">
+                        <label for="exercise">Exercise</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="socializing" name="activities" value="socializing">
+                        <label for="socializing">Socializing</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="selfcare" name="activities" value="selfcare">
+                        <label for="selfcare">Self-care</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="therapy" name="activities" value="therapy">
+                        <label for="therapy">Therapy/Counseling</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="notes">Additional notes (optional)</label>
+                    <textarea id="notes" name="notes" rows="3" placeholder="How was your day? Any thoughts or feelings you'd like to record?"></textarea>
+                </div>
+                
+                <button type="submit" class="btn" style="width: 100%;">Save Check-in</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <a href="#" onclick="showPage('support')">Find Support</a>
+                    <a href="#" onclick="showCrisisModal()">Crisis Support</a>
+                    <a href="#" onclick="showPage('resources')">All Resources</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Platform</h4>
+                    <a href="#" onclick="showPage('register')">Register</a>
+                    <a href="#" onclick="showPage('dashboard')">Dashboard</a>
+                    <a href="#" onclick="showPage('about')">About</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Support SDG 3</h4>
+                    <a href="https://sdgs.un.org/goals/goal3" target="_blank">Learn about SDG 3</a>
+                    <a href="#" onclick="showPage('about')">Our Mission</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Emergency</h4>
+                    <a href="tel:911">Emergency: 911</a>
+                    <a href="tel:988">Crisis Line: 988</a>
+                    <a href="sms:741741">Text: HOME to 741741</a>
+                </div>
+            </div>
+            <div style="border-top: 1px solid #555; padding-top: 1rem; margin-top: 2rem;">
+                <p>&copy; 2025 MindConnect. Supporting mental health and SDG 3: Good Health and Well-being.</p>
+                <p style="font-size: 0.9rem; color: #ccc;">If you're experiencing a mental health emergency, please contact emergency services immediately.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Application State
+        let currentUser = null;
+        let userRegistrations = [];
+        let checkins = [];
+        
+        // Navigation Functions
+        function showPage(pageId) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Update navigation
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Find and activate current nav link
+            const currentLink = document.querySelector(`[onclick="showPage('${pageId}')"]`);
+            if (currentLink) {
+                currentLink.classList.add('active');
+            }
+            
+            // Close mobile menu if open
+            document.getElementById('navMenu').classList.remove('active');
+        }
+        
+        function toggleMobileMenu() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.toggle('active');
+        }
+        
+        // Registration Functions
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Show loading state
+            const buttonText = document.getElementById('registerButtonText');
+            const buttonLoader = document.getElementById('registerButtonLoader');
+            buttonText.style.display = 'none';
+            buttonLoader.style.display = 'inline-block';
+            
+            // Get form data
+            const formData = new FormData(e.target);
+            const userData = {
+                id: Date.now(),
+                fullName: formData.get('fullName'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                age: formData.get('age'),
+                location: formData.get('location'),
+                supportTypes: formData.getAll('supportTypes'),
+                urgencyLevel: formData.get('urgencyLevel'),
+                additionalInfo: formData.get('additionalInfo'),
+                registrationDate: new Date().toISOString(),
+                privacy: formData.get('privacy'),
+                newsletter: formData.get('newsletter')
+            };
+            
+            // Simulate registration process
+            setTimeout(() => {
+                // Store user data
+                userRegistrations.push(userData);
+                currentUser = userData;
+                
+                // Reset loading state
+                buttonText.style.display = 'inline-block';
+                buttonLoader.style.display = 'none';
+                
+                // Show success message
+                showAlert('success', `Welcome to MindConnect, ${userData.fullName}! Your account has been created successfully.`);
+                
+                // Reset form
+                e.target.reset();
+                
+                // Navigate to dashboard
+                setTimeout(() => {
+                    showPage('dashboard');
+                    updateDashboard();
+                }, 2000);
+                
+            }, 2000);
+        });
+        
+        // Support Search Functions
+        document.getElementById('supportSearchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const searchData = {
+                location: formData.get('searchLocation'),
+                type: formData.get('supportType'),
+                format: formData.get('meetingFormat')
+            };
+            
+            showAlert('success', `Searching for support options in ${searchData.location || 'your area'}...`);
+            
+            // In a real application, this would make an API call
+            setTimeout(() => {
+                showAlert('success', 'Search completed! Here are the available support options in your area.');
+            }, 1500);
+        });
+        
+        // Check-in Functions
+        function showCheckInModal() {
+            document.getElementById('checkinModal').style.display = 'block';
+        }
+        
+        function closeCheckinModal() {
+            document.getElementById('checkinModal').style.display = 'none';
+        }
+        
+        document.getElementById('checkinForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const checkinData = {
+                id: Date.now(),
+                date: new Date().toISOString(),
+                mood: formData.get('moodRating'),
+                activities: formData.getAll('activities'),
+                notes: formData.get('notes')
+            };
+            
+            checkins.push(checkinData);
+            
+            showAlert('success', 'Check-in saved successfully! Keep up the great work.');
+            closeCheckinModal();
+            
+            // Reset form
+            e.target.reset();
+            
+            // Update dashboard if we're on it
+            if (document.getElementById('dashboard').classList.contains('active')) {
+                updateDashboard();
+            }
+        });
+        
+        // Crisis Support Functions
+        function showCrisisModal() {
+            document.getElementById('crisisModal').style.display = 'block';
+        }
+        
+        function closeCrisisModal() {
+            document.getElementById('crisisModal').style.display = 'none';
+        }
+        
+        function callCrisisLine() {
+            if (confirm('This will call the Suicide & Crisis Lifeline (988). Continue?')) {
+                window.location.href = 'tel:988';
+            }
+        }
+        
+        // Dashboard Functions
+        function updateDashboard() {
+            // Update dashboard statistics
+            if (currentUser) {
+                const registrationDate = new Date(currentUser.registrationDate);
+                const today = new Date();
+                const daysDiff = Math.floor((today - registrationDate) / (1000 * 60 * 60 * 24));
+                
+                document.getElementById('daysJoined').textContent = daysDiff;
+                document.getElementById('checkins').textContent = checkins.length;
+                document.getElementById('connections').textContent = currentUser.supportTypes ? currentUser.supportTypes.length : 0;
+                document.getElementById('resourcesUsed').textContent = Math.floor(Math.random() * 15) + 5;
+            }
+        }
+        
+        // Resource Interaction Functions
+        function joinPeerGroup() {
+            showAlert('success', 'Great! We\'ll connect you with a peer support group coordinator within 24 hours.');
+        }
+        
+        function findHealthcare() {
+            showAlert('success', 'Searching for healthcare providers in your area. You\'ll receive a list of available options shortly.');
+        }
+        
+        function findCounselors() {
+            showAlert('success', 'Finding licensed counselors near you. We\'ll send you contact information and availability.');
+        }
+        
+        function findFaithSupport() {
+            showAlert('success', 'Connecting you with faith-based mental health support in your community.');
+        }
+        
+        function exploreNGOs() {
+            showAlert('success', 'Exploring NGO mental health programs. You\'ll receive information about available services.');
+        }
+        
+        // Support Group Functions
+        function joinGroup(groupId) {
+            showAlert('success', 'Request sent! The group facilitator will contact you within 48 hours with joining information.');
+        }
+        
+        function contactGroup(groupId) {
+            showAlert('success', 'Contact information sent to your email. You can reach out directly to learn more.');
+        }
+        
+        function bookAppointment(providerId) {
+            showAlert('success', 'Appointment request submitted. The provider will contact you within 1-2 business days.');
+        }
+        
+        function learnMore(providerId) {
+            showAlert('success', 'More information about this provider has been sent to your email.');
+        }
+        
+        function contactHospital(hospitalId) {
+            showAlert('success', 'Contact information provided. You can call directly or request a callback.');
+        }
+        
+        function getDirections(locationId) {
+            showAlert('success', 'Directions sent to your phone. You can also access them anytime from your dashboard.');
+        }
+        
+        function joinMinistry(ministryId) {
+            showAlert('success', 'Ministry coordinator will reach out to welcome you and provide meeting details.');
+        }
+        
+        function contactMinistry(ministryId) {
+            showAlert('success', 'Contact information provided. Feel free to reach out with any questions.');
+        }
+        
+        function explorePrograms(ngoId) {
+            showAlert('success', 'Program information sent to your email. Explore various mental health initiatives.');
+        }
+        
+        function volunteer(ngoId) {
+            showAlert('success', 'Thank you for your interest! Volunteer coordinator will contact you about opportunities.');
+        }
+        
+        // Dashboard Action Functions
+        function viewSchedule() {
+            showAlert('success', 'Your upcoming appointments and sessions are displayed in your personal calendar.');
+        }
+        
+        function viewMoodTrends() {
+            showAlert('success', 'Mood tracking chart updated. Review your progress patterns over time.');
+        }
+        
+        function manageGoals() {
+            showAlert('success', 'Goal management tools opened. Set new goals and track your achievements.');
+        }
+        
+        // Utility Functions
+        function showAlert(type, message) {
+            // Remove any existing alerts
+            const existingAlerts = document.querySelectorAll('.alert');
+            existingAlerts.forEach(alert => alert.remove());
+            
+            // Create new alert
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            
+            // Insert alert at top of current page
+            const currentPage = document.querySelector('.page.active');
+            const container = currentPage.querySelector('.container');
+            container.insertBefore(alert, container.firstChild);
+            
+            // Auto-remove alert after 5 seconds
+            setTimeout(() => {
+                if (alert.parentNode) {
+                    alert.remove();
+                }
+            }, 5000);
+            
+            // Scroll to top to show alert
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+        
+        // Handle urgent support requests
+        function handleUrgentRequest() {
+            const urgencyLevel = document.getElementById('urgencyLevel').value;
+            if (urgencyLevel === 'urgent') {
+                if (confirm('You indicated you need immediate help. Would you like to connect with crisis support resources right now?')) {
+                    showCrisisModal();
+                }
+            }
+        }
+        
+        // Add event listener for urgency level changes
+        document.addEventListener('DOMContentLoaded', function() {
+            const urgencySelect = document.getElementById('urgencyLevel');
+            if (urgencySelect) {
+                urgencySelect.addEventListener('change', handleUrgentRequest);
+            }
+        });
+        
+        // Initialize dashboard on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simulate some existing data for demo purposes
+            currentUser = {
+                fullName: 'Demo User',
+                registrationDate: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(), // 15 days ago
+                supportTypes: ['peer', 'counseling', 'healthcare']
+            };
+            
+            // Add some sample check-ins
+            for (let i = 0; i < 12; i++) {
+                checkins.push({
+                    id: Date.now() + i,
+                    date: new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString(),
+                    mood: Math.floor(Math.random() * 10) + 1
+                });
+            }
+            
+            updateDashboard();
+        });
+    </script>
+</body>
+</html>
