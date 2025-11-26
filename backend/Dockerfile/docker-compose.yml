@@ -8,7 +8,7 @@
       NODE_ENV: development
       PORT: 5000
       MONGO_URI: mongodb://admin:password123@mongodb:27017/mindconnect?authSource=admin
-      JWT_SECRET: your-super-secret-jwt-key-change-in-production
+      JWT_SECRET: yEFfSgdIudFwX357DPbJ_tHFhsmhFki2Z-ZtqhSf2Dmory1PgMT5UzDgeyZcUnDt7vHqyBXQdR8-OWoz8Fd6uQ
       JWT_EXPIRE: 7d
       FRONTEND_URL: http://localhost:3000
     ports:
