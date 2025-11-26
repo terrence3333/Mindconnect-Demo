@@ -1,0 +1,28 @@
+frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: mindconnect-frontend
+    restart: unless-stopped
+    environment:
+      REACT_APP_API_URL: http://localhost:5000/api
+      REACT_APP_SOCKET_URL: http://localhost:5000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - mindconnect-network
+    stdin_open: true
+    tty: true
+
+networks:
+  mindconnect-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+  mongodb_config:
